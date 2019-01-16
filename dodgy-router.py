@@ -23,6 +23,7 @@ def handle_message(msg, channel, message_queue):
       next_message = message_queue.pop(0)
       if msg not in message_queue:
         message_queue.append(msg)
+        print(message_queue, channel)
     else:
       next_message = msg
     print('sending message:',next_message,'from:',channel)
@@ -30,14 +31,16 @@ def handle_message(msg, channel, message_queue):
   # 30% of the time - add to message queue - after the next one
   elif rand <= 7:
     print('queuing message:',msg,'from:',channel)
-    message_queue.append(msg)
+    if msg not in message_queue:
+      message_queue.append(msg)
+      print(message_queue, channel)
   # 20% of the time, drop the packet
   else:
     print('dropped packet:',msg,'from:',channel)
   # 8, 9 - ignore the message.
   return message_queue
 
-message_queue_send = []
+message_queue_sender = []
 message_queue_receiver = []
 
 TIMEOUT = 5000
@@ -59,7 +62,7 @@ while True:
   
   # clear 1 item from the send or receive queue every 5 seconds, if there is a queue
   if message_queue_sender and (current_time - last_cleared_sender) > TIMEOUT:
-    msg = message_queue_send.pop(0)
+    msg = message_queue_sender.pop(0)
     print('clearing queue msg:',msg,'from:',7)
     pass_message(msg, 8)
     last_cleared_sender = running_time()
