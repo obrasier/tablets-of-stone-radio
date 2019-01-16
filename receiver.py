@@ -5,7 +5,6 @@ radio.on()
 
 received = []
 packets_received = []
-TIMEOUT = 1000
 unprinted_message = False
 while True:
   msg = radio.receive()
@@ -28,8 +27,8 @@ while True:
       received_time = running_time()
       unprinted_message = True
   
-  # after timeout, and there is a new message to print, display it
-  if received and unprinted_message and (current_time - received_time) > TIMEOUT:
+  # there is a new message to print, display it
+  if received and unprinted_message:
     received_str = ""
     for packet in received:
       received_str += packet[1:]
