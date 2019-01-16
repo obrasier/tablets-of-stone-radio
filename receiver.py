@@ -5,11 +5,9 @@ radio.on()
 
 received = []
 packets_received = []
-unprinted_message = False
+new_message = False
 while True:
   msg = radio.receive()
-  current_time = running_time()
-
   # handle message coming in
   if msg:
     message_num = int(msg[0])
@@ -25,16 +23,23 @@ while True:
       received.append(msg)
       received.sort()
       received_time = running_time()
-      unprinted_message = True
+      new_message = True
   
   # there is a new message to print, display it
-  if received and unprinted_message:
+  if received and new_message:
     received_str = ""
     for packet in received:
       received_str += packet[1:]
     print(received_str)
     display.scroll(received_str, wait=False, loop=True)
-    unprinted_message = False
+    new_message = False
+  
+  # if b pressed, reset
+  if button_b.was_pressed():
+    received = []
+    packets_received = []
+    new_message = False
+    display.clear()
   
 
 
